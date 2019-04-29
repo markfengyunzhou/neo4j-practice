@@ -99,7 +99,7 @@ DELETE n,r
 
 ## 查询入度以及出度
 ```
-MATCH (p:Person {telNumber:"18661659951"})
+MATCH (p:Person {telNumber:"1866165xxxx"})
 WITH p, size ((p)-[:call]-> ()) AS outDegree, size ((p)<-[:call]- ()) AS inDegree
 return p, inDegree, outDegree
 ```
