@@ -90,6 +90,11 @@ CALL db.constraints
 match (p:Person)
 detach delete p
 ```
+* 删除属性
+```
+match (p:Person )
+remove p.community
+```
 * 清空
 ```
 MATCH (n)
@@ -108,6 +113,41 @@ return p, inDegree, outDegree
 * 查询经过1-5次关系能够到达s的路径
 ```
 match (s:Person {name:"c"})
-match p=(n)-[\*1..5]->(s)
+match p=(n)-[:call \*1..5]->(s)
 return p
+```
+
+## apoc
+*  添加插件
+```
+下载jar包 https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases
+放到plugins 目录下
+neo4j.conf 加上 dbms.security.procedures.unrestricted=apoc.\*
+重启neo4j
+return apoc.version()
+```
+* dijkstra  
+```
+call apoc.help("dijkstra")
+
+```
+
+```
+match (p0:Person {name:"0"})
+match (pc:Person {name: "c"})
+CALL apoc.algo.dijkstra(p0, pc, "call", "d") yield path as path, weight as weight
+return path, weight
+
+```
+* 社区发现 
+发现并生成社区
+```
+CALL apoc.algo.community(25,["Person"],'community','call','BOTH',null, 1000)
+
+```
+社区查看
+```
+MATCH (n:Person) 
+RETURN distinct(n.community) as community,count(n) as Members,
+avg(n.count) as avg_count,stdev(n.count) as count_stdev
 ```
